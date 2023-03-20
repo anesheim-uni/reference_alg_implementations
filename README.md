@@ -1,8 +1,8 @@
 # algorithms
 ### Repository for Algorithm Implementations
 **Includes:**
-- Dijkstra's shortest path
-
+- Dijkstra's Shortest Path
+- Floyd Warshall's All Pairs Shortest Path
 
 ## requirements.txt
 Install requirements with ```pip3 install -r requirements.txt```
