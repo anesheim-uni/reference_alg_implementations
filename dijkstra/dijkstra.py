@@ -4,7 +4,7 @@ import json
 def main():
     '''Function main, runs the module'''
     # Read in the graph
-    with open("./graphs/A-E.json", "r") as read_file:
+    with open("./graphs/A-E.json", "r", encoding="utf-8") as read_file:
         data = json.load(read_file)
     print(data)
 
