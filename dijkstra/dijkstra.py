@@ -48,6 +48,9 @@ def main() -> None:
     with open("./graphs/A-G.json", "r", encoding="utf-8") as read_file:
         data_a_e: dict[str,dict[str,int]] = json.load(read_file)
     print(dijkstra(data_a_e, "A"))
+    with open("./graphs/A-O.json", "r", encoding="utf-8") as read_file:
+        data_a_o: dict[str,dict[str,int]] = json.load(read_file)
+    print(dijkstra(data_a_o, "A"))
 
 if __name__ != "main":
     main()
