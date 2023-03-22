@@ -4,8 +4,8 @@ import json
 def dijkstra(graph : 'dict[str, dict[str,int]]',
              source: str) -> 'dict[str, tuple[int, str]]':
     '''Receives a graph and a starting node, returns a table of shortest paths and previous nodes'''
-    unvisited_nodes: list[str] = []
-    shortest_path: dict[str, tuple[int, str]] = {}
+    unvisited_nodes: 'list[str]' = []
+    shortest_path: 'dict[str, tuple[int, str]]' = {}
     for key in graph:
         unvisited_nodes.append(key)
         if key != source:
@@ -43,13 +43,13 @@ def update_shortest_path(source: str,
 def main() -> None:
     '''Function main, runs the module'''
     with open("./graphs/A-E.json", "r", encoding="utf-8") as read_file:
-        data_a_e: dict[str,dict[str,int]] = json.load(read_file)
+        data_a_e: 'dict[str,dict[str,int]]' = json.load(read_file)
     print(dijkstra(data_a_e, "A"))
     with open("./graphs/A-G.json", "r", encoding="utf-8") as read_file:
-        data_a_e: dict[str,dict[str,int]] = json.load(read_file)
+        data_a_e: 'dict[str,dict[str,int]]' = json.load(read_file)
     print(dijkstra(data_a_e, "A"))
     with open("./graphs/A-O.json", "r", encoding="utf-8") as read_file:
-        data_a_o: dict[str,dict[str,int]] = json.load(read_file)
+        data_a_o: 'dict[str,dict[str,int]]' = json.load(read_file)
     print(dijkstra(data_a_o, "A"))
 
 if __name__ != "main":
