@@ -13,7 +13,7 @@ def dijkstra(graph : 'dict[str, dict[str,int]]',
         else:
             shortest_path[key] = (0, "source")
     while len(unvisited_nodes) != 0:
-        selected_node = find_smallest_distance(shortest_path, unvisited_nodes)
+        selected_node: str = find_smallest_distance(shortest_path, unvisited_nodes)
         unvisited_nodes.remove(selected_node)
         shortest_path = update_shortest_path(selected_node,
                                              graph[selected_node],
@@ -27,6 +27,7 @@ def find_smallest_distance(shortest_path: 'dict[str, tuple[int, str]]',
     smallest: str = "null"
     for elem in unvisited_nodes:
         if shortest_path[elem][0] < minimum:
+            minimum = shortest_path[elem][0]
             smallest: str = elem
     return smallest
 
@@ -39,11 +40,14 @@ def update_shortest_path(source: str,
             shortest_path[key] = value + shortest_path[source][0], source
     return shortest_path
 
-def main():
+def main() -> None:
     '''Function main, runs the module'''
     with open("./graphs/A-E.json", "r", encoding="utf-8") as read_file:
-        data: dict[str,dict[str,int]] = json.load(read_file)
-    print(dijkstra(data, "A"))
+        data_a_e: dict[str,dict[str,int]] = json.load(read_file)
+    print(dijkstra(data_a_e, "A"))
+    with open("./graphs/A-G.json", "r", encoding="utf-8") as read_file:
+        data_a_e: dict[str,dict[str,int]] = json.load(read_file)
+    print(dijkstra(data_a_e, "A"))
 
 if __name__ != "main":
     main()
