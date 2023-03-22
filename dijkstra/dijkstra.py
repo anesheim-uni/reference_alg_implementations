@@ -1,56 +1,94 @@
 '''Module that contains the dijkstra's shortest path implementation'''
 import json
 
-def dijkstra(graph : 'dict[str, dict[str,int]]',
-             source: str) -> 'dict[str, tuple[int, str]]':
-    '''Receives a graph and a starting node, returns a table of shortest paths and previous nodes'''
-    unvisited_nodes: 'list[str]' = []
-    shortest_path: 'dict[str, tuple[int, str]]' = {}
+
+def find_candidate(shortest_path: dict[str, tuple[int, str]], unvisited: list[str]) -> str:
+    """
+    Find the node with the lowest cost currently
+    Args:
+        shortest_path (dict[str, tuple[int, str]]): shortest path table (dist and prev)
+        unvisited (list[str]): list of not-yet visited nodes
+    Returns:
+        str: the node (candidate) with the lowest cost
+    """
+    minimum: int = 1000
+    smallest_key: str = "null"
+    for elem in unvisited:
+        if shortest_path[elem][0] < minimum:
+            minimum = shortest_path[elem][0]
+            smallest_key = elem
+
+    return smallest_key
+
+
+def update_shortest_path(selected_node: str,
+                         neighbors: dict[str, int],
+                         shortest_path: dict[str, tuple[int, str]]) -> dict[str, tuple[int, str]]:
+    """
+    Updates the shortest path of the candidate node if a better alternative is found
+    Args:
+        selected_node (str): the candidate node under consideration
+        neighbors (dict[str, int]): immediate neighbors to th candidate node
+        shortest_path (dict[str, tuple[int, str]]): shortest path table (dist and prev)
+
+    Returns:
+        dict[str, tuple[int, str]]: updated shortest path table (dist and prev)
+    """
+    for key, value in neighbors.items():
+        if value + shortest_path[selected_node][0] < shortest_path[key][0]:
+            shortest_path[key] = value + shortest_path[selected_node][0], selected_node
+    return shortest_path
+
+
+def dijkstra(graph: dict[str, dict[str, int]],
+             source: str) -> dict[str, tuple[int, str]]:
+    """
+    Calculates the single source shortest path according to the dijkstra algorithm
+    Args:
+        graph (dict[str, dict[str, int]]): The input graph consisting of nodes and connecting edges
+        source (str): The source node, used as basis for the dijkstra run
+    Returns:
+        dict[str, tuple[int, str]: Updated shortest path matrix consisting of dist and prev columns
+    """
+    unvisited: list[str] = []
+    shortest_path: dict[str, tuple[int, str]] = {}
+
+    # Init
     for key in graph:
-        unvisited_nodes.append(key)
+        unvisited.append(key)
         if key != source:
             shortest_path[key] = (1000, "null")
         else:
             shortest_path[key] = (0, "source")
-    while len(unvisited_nodes) != 0:
-        selected_node: str = find_smallest_distance(shortest_path, unvisited_nodes)
-        unvisited_nodes.remove(selected_node)
+
+    # Continue as long as we are not done
+    while len(unvisited) > 0:
+        selected_node = find_candidate(shortest_path, unvisited)
+        unvisited.remove(selected_node)
+
+        # Relax/Update weights
         shortest_path = update_shortest_path(selected_node,
                                              graph[selected_node],
                                              shortest_path)
+
     return shortest_path
 
-def find_smallest_distance(shortest_path: 'dict[str, tuple[int, str]]',
-                           unvisited_nodes: 'list[str]' )-> str:
-    '''Finds the unvisited node with the least distance from source node'''
-    minimum: int = 1000
-    smallest: str = "null"
-    for elem in unvisited_nodes:
-        if shortest_path[elem][0] < minimum:
-            minimum = shortest_path[elem][0]
-            smallest: str = elem
-    return smallest
 
-def update_shortest_path(source: str,
-                    neighbors: 'dict[str,int]',
-                    shortest_path: 'dict[str, tuple[int, str]]') -> 'dict[str, tuple[int, str]]':
-    '''Updates shortest path thrugh some given source node'''
-    for key, value in neighbors.items():
-        if value + shortest_path[source][0] < shortest_path[key][0]:
-            shortest_path[key] = value + shortest_path[source][0], source
-    return shortest_path
+def main():
+    '''
+    Function main, runs the module
+    Returns:
+        None: None
+    '''
+    # Read in the graph
+    with open("../graphs/A-O.json", "r", encoding="utf-8") as read_file:
+        data: dict[str, dict[str, int]] = json.load(read_file)
 
-def main() -> None:
-    '''Function main, runs the module'''
-    with open("./graphs/A-E.json", "r", encoding="utf-8") as read_file:
-        data_a_e: 'dict[str,dict[str,int]]' = json.load(read_file)
-    print(dijkstra(data_a_e, "A"))
-    with open("./graphs/A-G.json", "r", encoding="utf-8") as read_file:
-        data_a_e: 'dict[str,dict[str,int]]' = json.load(read_file)
-    print(dijkstra(data_a_e, "A"))
-    with open("./graphs/A-O.json", "r", encoding="utf-8") as read_file:
-        data_a_o: 'dict[str,dict[str,int]]' = json.load(read_file)
-    print(dijkstra(data_a_o, "A"))
+    source = "A"
+    dijkstra_res = dijkstra(data, source)
+    print(dijkstra_res)
+
+
 
 if __name__ != "main":
     main()
